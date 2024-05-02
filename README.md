@@ -3,5 +3,5 @@
 Methods covered:
 
 - principle component analysis (PCA)
-- multidimensional scaling (MDS) and non-parametric (NMDS)
+- multidimensional scaling, parametric (MDS) and non-parametric (NMDS)
 - cluster analysis
