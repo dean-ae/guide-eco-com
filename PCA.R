@@ -1,6 +1,5 @@
 #' title: Principle Component Analysis for SEER
 #' author: Dean Erasmus 
-#' lastUpdated: 2024 03 13
 
 ## Setup ----
 
