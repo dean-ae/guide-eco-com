@@ -5,22 +5,36 @@
 
 rm(list = ls())
 
-setwd("G:/My Drive/R")
+setwd()
+
+# packages
 
 library(tidyverse)
+library(MASS)
+library(smacof)
+library(cluster)
+library(ggdendro)
 library(ggfortify)
 library(vegan)
 
 ## Data ----
 
 data <- read_csv("protein.csv")
+
 head(data) # data is a matrix with n rows and p variables
+plot(data) # shows relationships between all variables
 
-# Standardise
+## Standardise ----
 
-df <- data %>% 
-  column_to_rownames(var = "Country") %>% # move identifier column to rownames
-  decostand(method = "standardize") # scaled by mean value
+df <- data |>
+  # move identifier column to row names
+  column_to_rownames(var = "Country") |>
+
+  # remove unused variables
+  dplyr::select(RedMeat:FrVeg) |>
+
+  # scale values if measured differently
+  decostand(method = "standardize")
 
 head(df)
 
@@ -71,4 +85,3 @@ PCAbiplot(df, scaled.mat = T)
 ## Scree Plot ----
 
 plot(svd(df)$d^2, type = 'b')
-

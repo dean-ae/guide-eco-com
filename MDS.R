@@ -1,11 +1,13 @@
-#' title: Multidimensional Scaling for SEER
+#' title: Multidimensional Scaling for Soil Ecology & Entomology Research
 #' author: Dean Erasmus
 
 ## Setup ----
 
 rm(list = ls())
 
-setwd("G:/My Drive/R")
+setwd()
+
+# packages
 
 library(tidyverse)
 library(MASS)
@@ -17,17 +19,19 @@ library(vegan)
 ## Data ----
 
 data <- read_csv("protein.csv")
-head(data) # data is a matrix with n rows and p variables
 
-plot(data)
+head(data) # data is a matrix with n rows and p variables
+plot(data) # shows relationships between all variables
 
 ## Standardise ----
 
-df <- data %>%
+df <- data |>
   # move identifier column to row names
-  column_to_rownames(var = "Country") %>% 
+  column_to_rownames(var = "Country") |>
+
   # remove unused variables
-  #dplyr::select() %>% 
+  dplyr::select(RedMeat:FrVeg) |>
+
   # scale values if measured differently
   decostand(method = "standardize")
 
@@ -51,7 +55,7 @@ glimpse(tree)
 
 # cluster groups
 tree.cut <- cutree(tree, k = 3) # cut tree at height
-tree.cut %>% sort() # k clusters of objects
+tree.cut |> sort() # k clusters of objects
 
 ## MDS ----
 
@@ -85,14 +89,13 @@ scaling <- function(dmat, method = "classic") {
     print <- "Kruskal"
     
   } 
-  df.mds <- df.mds %>% as_tibble()
+  df.mds <- df.mds |> as_tibble()
   colnames(df.mds) <- c("D1", "D2")
   
   print(paste0("Method used: ", print))
   
   return(df.mds)
 }
-
 
 df.mds <- scaling(dmat, method = "nmds")
 df.mds
@@ -103,28 +106,30 @@ CP051 <- c("#445B70", "#6DAD7D", "#FFCB79", "#FF96BA", "#FF8470") # b,g,y,p,o
 
 # ggplot
 
-df.mds %>% 
-  mutate(rowname = rownames(df), 
+df.mds |> 
+  mutate(rowname = rownames(df),
          #cluster = as.factor(tree.cut),
-         cluster = as.factor(data$GrowthForm)) %>% 
-  ggplot(aes(x = D1, y = D2, label = rowname, color = cluster, shape = cluster)) +
+         cluster = as.factor(data$GrowthForm)) |>
+  ggplot(aes(x = D1, y = D2,
+    label = rowname, color = cluster, shape = cluster)) +
   geom_text() +
   geom_point(size = 5, alpha = 0.75) +
   scale_color_manual(values = CP051) +
   theme_minimal() +
   theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank(), 
-        legend.position = 'right',
+        axis.title.y = element_blank(),
+        legend.position = "right",
         axis.text.x = element_blank(),
         axis.text.y = element_blank())
 
 # base package
 
-plot(df.mds, type="n", xlab="", ylab="", xaxt="n", yaxt="n", asp = 1)
+plot(df.mds, type = "n",
+  xlab = "", ylab = "",
+  xaxt = "n", yaxt = "n", asp = 1)
 for (i in 1:nrow(data)) {
-  text(x = df.mds[i,1], 
-       y = df.mds[i,2], 
+  text(x = df.mds[i,1],
+       y = df.mds[i,2],
        labels = rownames(df)[i],
        col = CP051[tree.cut[i]])
 }
-
