@@ -42,7 +42,7 @@ head(df)
 ?decostand
 
 dmat <- daisy(df, metric = "euclidean")
-dmat <- vegdist(df, metric = "euclidean")
+#dmat <- vegdist(df, metric = "euclidean")
 # methods include euclidean, jaccard, binomial...
 
 dmat # dissimilarity matrix is n x n with a 0 diagonal
@@ -102,19 +102,18 @@ df.mds
 
 ## Plot ----
 
-CP051 <- c("#445B70", "#6DAD7D", "#FFCB79", "#FF96BA", "#FF8470") # b,g,y,p,o
+plot_colours <- viridis::viridis(n = max(tree.cut))
 
 # ggplot
 
 df.mds |> 
   mutate(rowname = rownames(df),
-         #cluster = as.factor(tree.cut),
-         cluster = as.factor(data$GrowthForm)) |>
+         cluster = as.factor(tree.cut)) |> # grouping variable
   ggplot(aes(x = D1, y = D2,
     label = rowname, color = cluster, shape = cluster)) +
   geom_text() +
   geom_point(size = 5, alpha = 0.75) +
-  scale_color_manual(values = CP051) +
+  scale_color_manual(values = plot_colours) +
   theme_minimal() +
   theme(axis.title.x = element_blank(),
         axis.title.y = element_blank(),
