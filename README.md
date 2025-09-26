@@ -11,12 +11,9 @@ Methods covered:
 
 The dataset `protein.csv` is the protein consumption of various European countries.
 
-After reading in the dataset you will process it at least two ways:
+After reading in the dataset you will do intial processes to **tidy** and **standardise**.
 
-1. Tidy
-2. Standardise
-
-Tidying the data means ensuring the dataset will run smoothly through the functions. Here I pipe (`|>`) together the tidying and standardising functions. Firstly, I set the `Country` column to the rownames. This removes the column from the analysis and indicates the values that will be mapped in the ordination plots. Secondly, I select the variables that I want in the plot. Note, I indicate that the `select` function is from the `dplyr` package as the `MASS` package also has a `select` function. This can be omitted if 
+Tidying the data means ensuring the dataset will run smoothly through the functions. Here I pipe (`|>`) together the tidying and standardising functions. Firstly, I set the `Country` column to the rownames. This removes the column from the analysis and indicates the values that will be mapped in the ordination plots. Secondly, I select the variables that I want in the plot. Note, I indicate that the `select` function is from the `dplyr` package as the `MASS` package also has a `select` function. This can be omitted if you choose not to load the `MASS` package.
 
 ## Unsupervised
 
