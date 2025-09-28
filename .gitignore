@@ -1,2 +1,11 @@
-# Ignore the R project file
+# R project user-specific files
+.Rproj.user/
+
+# R session history
+.Rhistory
+
+# R project files
 *.Rproj
+
+# R archive
+archive.R

@@ -63,12 +63,12 @@ sum(pca$sdev[1:2])/sum(pca$sdev)
 
 autoplot(pca, data = data, 
          # Labels
-         label = TRUE, label.size = 3, colour = "black",
+         label = TRUE, label.size = 3, colour = "grey10",
          # Shapes
          shape = 16, # can be FALSE
          # Loadings
-         loadings.label = TRUE, loadings.colour = "cyan", 
-         loadings.label.size = 2, loadings.label.colour = "cyan") +
+         loadings.label = TRUE, loadings.colour = "red", 
+         loadings.label.size = 2, loadings.label.colour = "red") +
   theme_minimal()
 
 ## Biplot ----
@@ -76,11 +76,6 @@ autoplot(pca, data = data,
 # base package
 
 biplot(pca)
-
-# custom function
-
-source(file = "/Users/deanerasmus/My Drive/xy/functions/PCAbiplot.R")
-PCAbiplot(df, scaled.mat = T)
 
 ## Scree Plot ----
 

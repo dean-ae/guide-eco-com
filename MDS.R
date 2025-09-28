@@ -1,10 +1,12 @@
-#' title: Multidimensional Scaling for Soil Ecology & Entomology Research
-#' author: Dean Erasmus
+#' @title: Multidimensional Scaling for Soil Ecology & Entomology Research Lab
+#' @author: Dean Erasmus
+#' 
 
-## Setup ----
+# Setup ----
 
 rm(list = ls())
 
+getwd()
 setwd()
 
 # packages
@@ -16,9 +18,11 @@ library(cluster)
 library(ggdendro)
 library(vegan)
 
-## Data ----
+### ## # ## ### ## # ## ### ## # ## ###
 
-data <- read_csv("protein.csv")
+# Data ----
+
+data <- read.csv("protein.csv")
 
 head(data) # data is a matrix with n rows and p variables
 plot(data) # shows relationships between all variables
@@ -37,9 +41,9 @@ df <- data |>
 
 head(df)
 
-## Dissimilarity ----
+### ## # ## ### ## # ## ### ## # ## ###
 
-?decostand
+## Dissimilarity ----
 
 dmat <- daisy(df, metric = "euclidean")
 #dmat <- vegdist(df, metric = "euclidean")
@@ -47,17 +51,21 @@ dmat <- daisy(df, metric = "euclidean")
 
 dmat # dissimilarity matrix is n x n with a 0 diagonal
 
-## Clusters ----
+### ## # ## ### ## # ## ### ## # ## ###
+
+# Clusters ----
 
 tree <- hclust(dmat)
 ggdendrogram(tree)
 glimpse(tree)
 
 # cluster groups
-tree.cut <- cutree(tree, k = 3) # cut tree at height
-tree.cut |> sort() # k clusters of objects
+tree.cut <- cutree(tree, k = 3) # cut tree into k clusters
+tree.cut |> sort()
 
-## MDS ----
+### ## # ## ### ## # ## ### ## # ## ###
+
+# MDS ----
 
 # function to select MDS method
 
@@ -100,35 +108,33 @@ scaling <- function(dmat, method = "classic") {
 df.mds <- scaling(dmat, method = "nmds")
 df.mds
 
-## Plot ----
+### ## # ## ### ## # ## ### ## # ## ###
 
-plot_colours <- viridis::viridis(n = max(tree.cut))
+# Plot ----
 
-# ggplot
+## ggplot ----
 
 df.mds |> 
   mutate(rowname = rownames(df),
-         cluster = as.factor(tree.cut)) |> # grouping variable
+         cluster = as.factor(tree.cut)) |> # + grouping variable
+  
+  # plot
   ggplot(aes(x = D1, y = D2,
     label = rowname, color = cluster, shape = cluster)) +
-  geom_text() +
-  geom_point(size = 5, alpha = 0.75) +
-  scale_color_manual(values = plot_colours) +
+  
+  # plot points
+  geom_point(size = 5, alpha = 1) +
+  #scale_color_manual(values = viridis::viridis(n = max(tree.cut))) +
+  scale_color_manual(values = c("palegreen4", "deeppink1", "royalblue1")) +
+  
+  # plot text
+  geom_text(col = 'grey10', size = 10, size.unit = 'pt') +
+  # remove colour to inherit above values
+  
+  # plot theme
   theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        legend.position = "right",
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank())
+  labs(x = '', y = '', # removes axis titles
+       color = "Cluster", shape = "Cluster") + # in case you include the legend
+  theme(legend.position = '') # removes legend
 
-# base package
-
-plot(df.mds, type = "n",
-  xlab = "", ylab = "",
-  xaxt = "n", yaxt = "n", asp = 1)
-for (i in 1:nrow(data)) {
-  text(x = df.mds[i,1],
-       y = df.mds[i,2],
-       labels = rownames(df)[i],
-       col = CP051[tree.cut[i]])
-}
+### ## # ## ### ## # ## ### ## # ## ###
