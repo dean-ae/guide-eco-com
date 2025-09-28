@@ -1,11 +1,10 @@
 # Guide to Ecological Community Analysis
 
-Methods covered:
-
-- [Principle Component Analysis (PCA)](#pca)
-- Multidimensional Scaling
-  - parametric (MDS)
-  - non-parametric (NMDS)
+>[!INFO] Methods covered:
+>- [Principle Component Analysis (PCA)](#pca)
+>- [Multidimensional Scaling (MDS)](#mds)
+>  - parametric (MDS)
+>  - non-parametric (NMDS)
 
 ## Dataset
 
@@ -19,9 +18,13 @@ Tidying the data means ensuring the dataset will run smoothly through the functi
 
 ### PCA
 
+[Link to script.](PCA.R)
+
 *To Do*
 
 ### MDS
+
+[Link to script.](MDS.R)
 
 *To Do*
 
