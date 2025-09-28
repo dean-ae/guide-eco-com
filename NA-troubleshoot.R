@@ -1,7 +1,10 @@
-#' @title Troubleshooting NAs
+#' @title NA Troubleshooting
 #' @author Dean A. Erasmus
+#' @description
+#' Troubleshoot NAs in your data frame. Convert them to zeroes.
+#' 
 
-# setup ----
+# Setup ----
 
 rm(list = ls())
 getwd()
@@ -11,7 +14,7 @@ library(tidyverse)
 
 ### ## # ## ### ## # ## ### ## # ## ###
 
-# data ----
+# Data ----
 
 # matrix with NAs instead of zeroes
 
@@ -22,13 +25,13 @@ mat_na <- matrix(data = sample(values, 40, replace = T), ncol = 4)
 mat_na
 # see NAs
 
-# base: NA <- 0 ----
+# Base: NA <- 0 ----
 
 mat_zero <- mat_na
 mat_zero[is.na(mat_zero)] <- 0
 mat_zero
 
-# tidyverse: NA <- 0 ----
+# Tidyverse: NA <- 0 ----
 # I prefer this method when working in a data frame as
 # some columns aren't numeric
 

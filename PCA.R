@@ -1,10 +1,14 @@
-#' title: Principle Component Analysis for SEER
-#' author: Dean Erasmus 
+#' @title: PCA for SEER
+#' @author: Dean A. Erasmus
+#' @description
+#' Principle Component Analysis for Soil Ecology and Entomology Research Lab.
+#' 
 
-## Setup ----
+# Setup ----
 
 rm(list = ls())
 
+getwd()
 setwd()
 
 # packages
@@ -17,7 +21,9 @@ library(ggdendro)
 library(ggfortify)
 library(vegan)
 
-## Data ----
+### ## # ## ### ## # ## ### ## # ## ###
+
+# Data ----
 
 data <- read_csv("protein.csv")
 
@@ -42,7 +48,9 @@ head(df)
 
 var(df)
 
-## PCA ----
+### ## # ## ### ## # ## ### ## # ## ###
+
+# PCA ----
 
 pca <- princomp(df, cor = T, scores = T, fix_sign = T)
 
@@ -59,7 +67,9 @@ pc1.rank <- tibble("scores" = pca$scores[,1], "rank" = rank(pca$scores[,1]))
 ## proportion of variation of first 2 eigen values
 sum(pca$sdev[1:2])/sum(pca$sdev)
 
-## PCA Plot ----
+### ## # ## ### ## # ## ### ## # ## ###
+
+# PCA Plot ----
 
 autoplot(pca, data = data, 
          # Labels
@@ -71,12 +81,18 @@ autoplot(pca, data = data,
          loadings.label.size = 2, loadings.label.colour = "red") +
   theme_minimal()
 
-## Biplot ----
+### ## # ## ### ## # ## ### ## # ## ###
+
+# Biplot ----
 
 # base package
 
 biplot(pca)
 
-## Scree Plot ----
+### ## # ## ### ## # ## ### ## # ## ###
+
+# Scree Plot ----
 
 plot(svd(df)$d^2, type = 'b')
+
+### ## # ## ### ## # ## ### ## # ## ###

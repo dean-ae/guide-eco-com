@@ -1,5 +1,7 @@
-#' @title: Multidimensional Scaling for Soil Ecology & Entomology Research Lab
-#' @author: Dean Erasmus
+#' @title: MDS for SEER
+#' @author: Dean A. Erasmus
+#' @description
+#' Multidimensional Scaling for Soil Ecology and Entomology Research lab.
 #' 
 
 # Setup ----
