@@ -1,10 +1,11 @@
 # Guide to Ecological Community Analysis
 
->[!INFO] Methods covered:
->- [Principle Component Analysis (PCA)](#pca)
->- [Multidimensional Scaling (MDS)](#mds)
->  - parametric (MDS)
->  - non-parametric (NMDS)
+Methods covered:
+
+- [Principle Component Analysis (PCA)](#pca)
+- [Multidimensional Scaling (MDS)](#mds)
+  - parametric (MDS)
+  - non-parametric (NMDS)
 
 ## Dataset
 
@@ -29,6 +30,17 @@ Tidying the data means ensuring the dataset will run smoothly through the functi
 *To Do*
 
 - [NMDS Plots in R by Jackie Zorz](https://jkzorz.github.io/2019/06/06/NMDS.html)
+
+#### Stress
+
+This table can be used as a rule of thumb.
+
+| Stress  | Meaning                 |
+| ------- | ----------------------- |
+| 0.2     | poor fit                |
+| 0.1–0.2 | interpret cautiously    |
+| <0.1    | good ordination         |
+| <0.05   | excellent               |
 
 ### Cluster
 

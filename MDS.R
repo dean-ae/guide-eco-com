@@ -9,7 +9,6 @@
 rm(list = ls())
 
 getwd()
-setwd()
 
 # packages
 
@@ -35,9 +34,6 @@ df <- data |>
   # move identifier column to row names
   column_to_rownames(var = "Country") |>
 
-  # remove unused variables
-  dplyr::select(RedMeat:FrVeg) |>
-
   # scale values if measured differently
   decostand(method = "standardize")
 
@@ -45,98 +41,85 @@ head(df)
 
 ### ## # ## ### ## # ## ### ## # ## ###
 
-## Dissimilarity ----
-
-dmat <- daisy(df, metric = "euclidean")
-#dmat <- vegdist(df, metric = "euclidean")
-# methods include euclidean, jaccard, binomial...
-
-dmat # dissimilarity matrix is n x n with a 0 diagonal
-
-### ## # ## ### ## # ## ### ## # ## ###
-
-# Clusters ----
-
-tree <- hclust(dmat)
-ggdendrogram(tree)
-glimpse(tree)
-
-# cluster groups
-tree.cut <- cutree(tree, k = 3) # cut tree into k clusters
-tree.cut |> sort()
-
-### ## # ## ### ## # ## ### ## # ## ###
-
 # MDS ----
 
-# function to select MDS method
+mds <- metaMDS(df, distance = 'euclidean')
 
-scaling <- function(dmat, method = "classic") {
-  
-  # classical scaling
-  if (method %in% c("classic", "classical", "mds")) {
-    df.mds <- cmdscale(dmat)
-    print <- "classical scaling"
-    
-    # metric smacof
-  } else if (method %in% c("smacof", "smacof 1", "metric smacof")) {
-    df.mds <- smacof::smacofSym(dmat, type = "ratio")$conf
-    print <- "metric SMACOF"
-    
-    # non-metric smacof
-  } else if (method %in% c("smacof 2", "nmds", "non-metric smacof")) {
-    df.mds <- smacof::smacofSym(dmat, type = "ordinal")$conf
-    print <- "non-metric SMACOF"
-    
-    # sammon non-metric
-  } else if (method %in% c("smacof 1", "sammon", "Sammon")) {
-    df.mds <- MASS::sammon(dmat)$points
-    print <- "Sammon"
-    
-    # kruskal non-metric
-  } else if (method == "kruskal") {
-    df.mds <- MASS::isoMDS(dmat)$points
-    print <- "Kruskal"
-    
-  } 
-  df.mds <- df.mds |> as_tibble()
-  colnames(df.mds) <- c("D1", "D2")
-  
-  print(paste0("Method used: ", print))
-  
-  return(df.mds)
-}
+plot(mds)
 
-df.mds <- scaling(dmat, method = "nmds")
-df.mds
+mds$points # this is what we want to plot
 
-### ## # ## ### ## # ## ### ## # ## ###
+## Plot Data ----
 
-# Plot ----
+mds.gg <- mds$points |> 
+  as.data.frame() |>
+  rownames_to_column('ID') |> 
+  as_tibble()
 
-## ggplot ----
+## Plot ----
 
-df.mds |> 
-  mutate(rowname = rownames(df),
-         cluster = as.factor(tree.cut)) |> # + grouping variable
+mds.gg |> 
   
   # plot
-  ggplot(aes(x = D1, y = D2,
-    label = rowname, color = cluster, shape = cluster)) +
+  ggplot(aes(x = MDS1, y = MDS2, label = ID)) +
   
   # plot points
-  geom_point(size = 5, alpha = 1) +
+  geom_point(size = 5, alpha = 0.5) +
   #scale_color_manual(values = viridis::viridis(n = max(tree.cut))) +
-  scale_color_manual(values = c("palegreen4", "deeppink1", "royalblue1")) +
   
   # plot text
-  geom_text(col = 'grey10', size = 10, size.unit = 'pt') +
+  geom_text(col = 'grey10', size = 10, size.unit = 'pt', nudge_y = 0.25) +
   # remove colour to inherit above values
   
-  # plot theme
+  # stress value
+  annotate('text', x = 1, y = 4.5,
+           label = paste('Stress: ', round(mds$stress, 2))) +
+
+  # plot theme and axes
+  labs(color = "Cluster", shape = "Cluster") + # in case you include the legend
   theme_minimal() +
-  labs(x = '', y = '', # removes axis titles
-       color = "Cluster", shape = "Cluster") + # in case you include the legend
-  theme(legend.position = '') # removes legend
+  theme(legend.position = '') # removes legend; else + bottom, top, left, or right
+
+## Add Clusters ----
+
+### Clusters
+
+# dendrogram
+tree <- hclust(df |> vegdist(method = 'euclidean'))
+ggdendro::ggdendrogram(tree)
+
+# clusters
+tree.cut <- cutree(tree, k = 4) # cut tree into k clusters
+tree.cut <- data.frame(cluster = as.numeric(tree.cut), ID = names(tree.cut))
+
+tree.cut
+
+# add clusters
+mds.gg.cluster <- mds.gg |> left_join(tree.cut, by = 'ID') |> 
+  mutate(cluster = as.factor(cluster))
+
+### Plot + Cluster Labels ----
+
+mds.gg.cluster |> 
+  
+  # plot
+  ggplot(aes(x = MDS1, y = MDS2, label = ID, colour = cluster, shape = cluster)) +
+  
+  # plot points
+  geom_point(size = 5, alpha = 0.75) +
+  scale_color_manual(values = viridis::viridis(n = max(tree.cut$cluster))) +
+  scale_shape_manual(values = c(15,16,17,18)) +
+  
+  # plot text
+  geom_text(col = 'grey10', size = 10, size.unit = 'pt', nudge_y = 0.25) +
+  
+  # stress value
+  annotate('text', x = 1, y = 4.5,
+           label = paste('Stress: ', round(mds$stress, 2))) +
+  
+  # plot theme and axes
+  labs(color = "Cluster", shape = "Cluster") + # in case you include the legend
+  theme_minimal() +
+  theme(legend.position = 'top')
 
 ### ## # ## ### ## # ## ### ## # ## ###

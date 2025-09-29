@@ -8,4 +8,4 @@
 *.Rproj
 
 # R archive
-archive.R
+archive/
