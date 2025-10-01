@@ -29,6 +29,10 @@ Tidying the data means ensuring the dataset will run smoothly through the functi
 
 *To Do*
 
+![MDS Plot with Clusters](plots/mds_cluster.svg)
+
+#### Resources
+
 - [NMDS Plots in R by Jackie Zorz](https://jkzorz.github.io/2019/06/06/NMDS.html)
 
 #### Stress
