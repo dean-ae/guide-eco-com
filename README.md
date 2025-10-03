@@ -6,38 +6,35 @@ Methods covered:
 - [Multidimensional Scaling (MDS)](#mds)
   - parametric (MDS)
   - non-parametric (NMDS)
+- [Cluster Dendrogram](#cluster)
+- [Analysis of Similarity (ANOSIM)](#anosim)
 
 ## Dataset
 
-<!--
-The dataset `protein.csv` is the protein consumption of various European countries.
--->
-
-The example dataset is `dune` and `dune.env` from the `vegan` package:
-
->The dune meadow vegetation data, dune, has cover class values of 30 species on 20 sites.
+The example dataset is [**dune**](https://cran.r-project.org/web/packages/BiodiversityR/readme/README.html) from the `vegan` package.
 
 ### Data Preparation
 
-After reading in the dataset you will do intial processes to **tidy** and **standardise**.
+- Dissimilarity matrix
+- 
 
-Tidying the data means ensuring the dataset will run smoothly through the functions. Here I pipe (`|>`) together the tidying and standardising functions. Firstly, I set the `Country` column to the rownames. This removes the column from the analysis and indicates the values that will be mapped in the ordination plots. Secondly, I select the variables that I want in the plot. Note, I indicate that the `select` function is from the `dplyr` package as the `MASS` package also has a `select` function. This can be omitted if you choose not to load the `MASS` package.
-
-## Unsupervised
+## Unsupervised/Exploratory
 
 ### PCA
 
 [Link to script.](PCA.R)
 
+#### Biplot
+
+---
+
 ### MDS
 
 [Link to script.](MDS.R)
 
-![MDS Plot with Clusters](plots/mds_cluster.svg)
+Multidimensional scaling is a form of dimension reduction.
 
-#### Resources
-
-- [NMDS Plots in R by Jackie Zorz](https://jkzorz.github.io/2019/06/06/NMDS.html)
+![MDS Plot](plots/mds.svg)
 
 #### Stress
 
@@ -50,11 +47,23 @@ This table can be used as a rule of thumb.
 | <0.1    | good ordination         |
 | <0.05   | excellent               |
 
+---
+
+#### Resources
+
+- [NMDS Plots in R by Jackie Zorz](https://jkzorz.github.io/2019/06/06/NMDS.html)
+
 ### Cluster
 
-## Supervised
+![Cluster Dendrogram](plots/tree.svg)
+
+---
+
+## Supervised/Predictive
 
 ### ANOSIM
+
+[Link to script.](ANOSIM.R)
 
 The analysis of similarity (ANOSIM) is a non-parametric test that uses a rank-based approach to test whether groups of samples are different.
 
