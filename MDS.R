@@ -13,127 +13,66 @@ getwd()
 
 library(tidyverse)
 library(vegan)
-library(ggdendro)
-library(cluster)
 
 ### ## # ## ### ## # ## ### ## # ## ###
 
 # Data ----
 
-data <- read.csv("protein.csv")
+# abundances; sample data; taxonomic data
+data(dune); data(dune.env); data(dune.taxon)
 
-head(data) # data is a matrix with n rows and p variables
-plot(data) # shows relationships between all variables
-
-## Standardise ----
-
-df <- data |>
-  # move identifier column to row names
-  column_to_rownames(var = "Country") |>
-
-  # scale values if measured differently
-  decostand(method = "standardize")
-
-head(df)
+# conserve the order of the data for joining later
 
 ### ## # ## ### ## # ## ### ## # ## ###
 
 # MDS ----
 
-mds <- metaMDS(df, distance = 'euclidean')
+# Bray-Curtis is the standard for community abundances
+dune_mds <- metaMDS(dune, distance = 'bray')
 
-plot(mds)
+# default plot
+plot(dune_mds)
 
-mds$points # this is what we want to plot
+## MDS Plot Data ----
 
-## Plot Data ----
+dune_mds$stress # this is important to report
+dune_mds$points # this is what we want to plot
 
-mds.df <- mds$points |> 
-  as.data.frame() |>
-  rownames_to_column('ID') |> 
-  as_tibble()
+# MDS points + environmental variables
+dune_mds.df <- bind_cols(dune_mds$points, dune.env) |> rownames_to_column('ID')
+  
+dune_mds.df
 
-## Plot ----
+## MDS Plot ----
 
-mds.gg <- mds.df |> 
+dune_mds.gg <- dune_mds.df |> 
   
   # plot
-  ggplot(aes(x = MDS1, y = MDS2, label = ID)) +
+  ggplot(aes(x = MDS1, y = MDS2, label = ID,
+             shape = Management, colour = Management)) +
   
   # plot points
-  geom_point(size = 5, alpha = 0.5) +
-  #scale_color_manual(values = viridis::viridis(n = max(tree.cut))) +
+  geom_point(size = 5, alpha = 1) +
+  scale_shape_manual(values = c(15:(15+nlevels(dune_mds.df$Management)))) +
+  scale_color_viridis_d(option = 'D') +
   
   # plot text
-  geom_text(col = 'grey10', size = 10, size.unit = 'pt', nudge_y = 0.25) +
+  geom_text(col = 'black', size = 10, size.unit = 'pt', nudge_y = 0.1) +
   # remove colour to inherit above values
   
   # stress value
-  annotate('text', x = 1, y = 4.5,
-           label = paste('Stress: ', round(mds$stress, 2))) +
+  annotate('text', x = 0.75, y = 1.0,
+           label = paste('Stress: ', round(dune_mds$stress, 3))) +
 
   # plot theme and axes
-  labs(color = "Cluster", shape = "Cluster") + # in case you include the legend
+  labs(color = "Management", shape = "Management") + # for legend
   theme_minimal() +
-  theme(legend.position = '') # removes legend; else + bottom, top, left, or right
+  theme(legend.position = 'right') # blank removes legend, else: bottom, top, left, or right
 
-mds.gg
-
-# save file as svg
-ggsave(filename = 'plots/mds.svg', plot = mds.gg,
-       width = 2048, height = 2048, units = 'px')
-
-## Add Clusters ----
-
-### Clusters
-
-# dendrogram
-tree <- hclust(df |> vegdist(method = 'euclidean'))
-tree.gg <- ggdendrogram(tree)
-tree.gg
+dune_mds.gg
 
 # save file as svg
-ggsave(filename = 'plots/tree.svg', plot = tree.gg,
-       width = 2048, height = 2048, units = 'px')
-
-# clusters
-tree.cut <- cutree(tree, k = 4) # cut tree into k clusters
-tree.cut <- data.frame(cluster = as.numeric(tree.cut), ID = names(tree.cut))
-
-tree.cut
-
-# add clusters
-mds.df_cluster <- mds.df |> left_join(tree.cut, by = 'ID') |> 
-  mutate(cluster = as.factor(cluster))
-
-### Plot + Cluster Labels ----
-
-mds.gg_cluster <- mds.df_cluster |> 
-  
-  # plot
-  ggplot(aes(x = MDS1, y = MDS2, label = ID, colour = cluster, shape = cluster)) +
-  
-  # plot points
-  geom_point(size = 5, alpha = 0.75) +
-  scale_color_manual(values = viridis::viridis(n = max(tree.cut$cluster))) +
-  scale_shape_manual(values = c(15,16,17,18)) +
-  
-  # plot text
-  geom_text(col = 'grey10', size = 10, size.unit = 'pt', nudge_y = 0.25) +
-  
-  # stress value
-  annotate('text', x = 1, y = 4.5,
-           label = paste('Stress: ', round(mds$stress, 2))) +
-  
-  # plot theme and axes
-  labs(color = "Cluster", shape = "Cluster") + # in case you include the legend
-  theme_minimal() +
-  theme(legend.position = 'top')
-
-mds.gg_cluster
-
-# save file as svg
-ggsave(filename = 'plots/mds_cluster.svg', plot = mds.gg_cluster,
-       width = 2048, height = 2048, units = 'px')
+ggsave(filename = 'plots/mds.svg', plot = dune_mds.gg,
+       width = 2048, height = 1536, units = 'px', bg = 'white')
 
 ### ## # ## ### ## # ## ### ## # ## ###

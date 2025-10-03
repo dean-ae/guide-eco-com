@@ -7,24 +7,39 @@
 # Setup ----
 
 rm(list = ls())
-
 getwd()
-setwd()
 
 # packages
 
 library(tidyverse)
-library(MASS)
-library(smacof)
-library(cluster)
-library(ggdendro)
 library(vegan)
 
 ### ## # ## ### ## # ## ### ## # ## ###
 
 # Data ----
 
-data <- read.csv("protein.csv")
+data(dune) # species abundance data
+data(dune.env) # environmental data
 
-head(data) # data is a matrix with n rows and p variables
-plot(data) # shows relationships between all variables
+head(dune)
+head(dune.env)
+
+### ## # ## ### ## # ## ### ## # ## ###
+
+# Distance ----
+
+dune.dist <- vegdist(dune, method = 'bray')
+
+dune.dist
+
+### ## # ## ### ## # ## ### ## # ## ###
+
+# ANOSIM ----
+
+dune.anosim <- anosim(dune.dist, dune.env$Management)
+
+summary(dune.anosim)
+
+plot(dune.anosim)
+
+### ## # ## ### ## # ## ### ## # ## ###

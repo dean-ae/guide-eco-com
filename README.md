@@ -9,7 +9,15 @@ Methods covered:
 
 ## Dataset
 
+<!--
 The dataset `protein.csv` is the protein consumption of various European countries.
+-->
+
+The example dataset is `dune` and `dune.env` from the `vegan` package:
+
+>The dune meadow vegetation data, dune, has cover class values of 30 species on 20 sites.
+
+### Data Preparation
 
 After reading in the dataset you will do intial processes to **tidy** and **standardise**.
 
@@ -21,13 +29,9 @@ Tidying the data means ensuring the dataset will run smoothly through the functi
 
 [Link to script.](PCA.R)
 
-*To Do*
-
 ### MDS
 
 [Link to script.](MDS.R)
-
-*To Do*
 
 ![MDS Plot with Clusters](plots/mds_cluster.svg)
 
@@ -48,13 +52,11 @@ This table can be used as a rule of thumb.
 
 ### Cluster
 
-*To Do*
-
 ## Supervised
 
 ### ANOSIM
 
-*To Do*
+The analysis of similarity (ANOSIM) is a non-parametric test that uses a rank-based approach to test whether groups of samples are different.
 
 ## To Do
 
