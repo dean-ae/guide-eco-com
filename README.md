@@ -6,6 +6,7 @@ Methods covered:
 - [Multidimensional Scaling (MDS)](#mds)
   - parametric (MDS)
   - non-parametric (NMDS)
+- [Principle Coordinate Analysis](#pcoa)
 - [Cluster Dendrogram](#cluster)
 - [Analysis of Similarity (ANOSIM)](#anosim)
 
@@ -16,7 +17,6 @@ The example dataset is [**dune**](https://cran.r-project.org/web/packages/Biodiv
 ### Data Preparation
 
 - Dissimilarity matrix
-- 
 
 ## Unsupervised/Exploratory
 
@@ -28,13 +28,23 @@ The example dataset is [**dune**](https://cran.r-project.org/web/packages/Biodiv
 
 ---
 
+### PCoA
+
+Principle coordinate analysis...
+
+[Link to script.](PCoA.R)
+
+![PCoA Plot](plots/pcoa.svg)
+
+---
+
 ### MDS
 
 [Link to script.](MDS.R)
 
 Multidimensional scaling is a form of dimension reduction.
 
-![MDS Plot](plots/mds.svg)
+![MDS Plot](plots/nmds.svg)
 
 #### Stress
 
